@@ -1,0 +1,12 @@
+#ifndef BOARD_CONFIG_H
+#define BOARD_CONFIG_H
+
+#define BUTTON_PIN 2
+#define BUTTON_LED_PIN 13
+
+#define BATTERY_VOLTAGE_PIN A0
+
+#define POWER_MOSFET_PIN 3
+
+
+#endif // BOARD_CONFIG_H

@@ -1,0 +1,18 @@
+{
+    "name": "PKAE_Timer",
+    "version": "1.0.0",
+    "description": "A simple timer implementation for embedded systems.",
+    "keywords": ["timer", "millis", "delay", "embedded"],
+    "authors": [
+      {
+        "name": "PKAE Electronics",
+        "email": "contact@pkae.com",
+        "maintainer": true
+      }
+    ],
+    "license": "MIT",
+    "frameworks": ["arduino"],
+    "platforms": ["atmelavr", "espressif32", "espressif8266", "stm32"],
+    "headers": "PKAE_Timer.h"
+  }
+  

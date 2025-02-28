@@ -1,9 +1,8 @@
-#include<Arduino.h>
 #include "board_config.h"
+#include <Arduino.h>
+#include <PKAE_Timer.h>
 
-float readBatteryVoltage();
-float readBatteryPercentage();
-
+void powerOff();
 
 void setup() {
     Serial.begin(115200);
@@ -14,23 +13,39 @@ void setup() {
 }
 
 void loop() {
-    if(readBatteryPercentage() < 20) {
-        digitalWrite(POWER_MOSFET_PIN, LOW);
-    } else {
-        digitalWrite(POWER_MOSFET_PIN, HIGH);
-        digitalWrite(BUTTON_LED_PIN, HIGH);
+    boolean lLEDstate = LOW;
+    boolean lReleased = true;
+
+    PKAE_Timer StableLED(300);
+    PKAE_Timer ButtonHeld(3000);
+
+    while (true) {
+        if (digitalRead(BUTTON_PIN) == LOW) {
+
+            if (lReleased and StableLED.IsTimeUp()) {
+                lLEDstate = !lLEDstate;
+                digitalWrite(BUTTON_LED_PIN, lLEDstate);
+            }
+            lReleased = false;
+        } else {
+            lReleased = true;
+            ButtonHeld.Reset();
+        }
+        if (ButtonHeld.IsTimeUp())
+            powerOff();
     }
 }
 
-float readBatteryVoltage() {
-    return analogRead(BATTERY_VOLTAGE_PIN) * 0.0048828125;
-}
+void powerOff() {
+    boolean lLEDstate = LOW;
+    PKAE_Timer BlinkLED(100);
+    digitalWrite(POWER_MOSFET_PIN, LOW);
 
-float readBatteryPercentage() {
-    float voltage = readBatteryVoltage();
-    if(voltage < 3.5) {
-        return 0;
-    } else {
-        return (voltage - 3.5) / 1.2 * 100;
+    // Rapid flash Onboard LED indicate power about to be lost
+    while (true) {
+        if (BlinkLED.IsTimeUp()) {
+            lLEDstate = !lLEDstate;
+            digitalWrite(BUTTON_LED_PIN, lLEDstate);
+        }
     }
 }

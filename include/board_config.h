@@ -8,5 +8,4 @@
 
 #define POWER_MOSFET_PIN 3
 
-
 #endif // BOARD_CONFIG_H
